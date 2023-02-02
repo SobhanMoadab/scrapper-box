@@ -30,11 +30,22 @@ describe('LoginClientUseCase', () => {
     };
     // When i attempt to login a client
     const result = await useCase.loginClient(dto);
-    console.log({ result });
-    // then i expect to get error for returned value
+    // Then i expect to get error for returned value
     expect(result.isRight()).toBeFalsy();
     expect(result.value).toBeInstanceOf(InvalidCredential);
   });
 
-  it('should login to the url given', async () => {});
+  it('should login to the url given', async () => {
+    // Given i provide correct input
+    const dto: LoginClientDTO = {
+      username: 'moadab',
+      password: 'Tx4%GeX7TY#75NmVjBtnul*c',
+      siteUrl: 'https://urumdental.com',
+    };
+    // When i attempt to login a client
+    const result = await useCase.loginClient(dto);
+    // Then i expect to get token as a result
+    expect(result.isLeft()).toBeFalsy();
+    expect(result.value.getValue()).toHaveProperty('token');
+  });
 });

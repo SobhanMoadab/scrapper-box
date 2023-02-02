@@ -10,8 +10,8 @@ import { Response as ExpressResponse } from 'express';
 @Controller()
 export class AppController {
   constructor(
-    private readonly searchProductUsecase: SearchProductUseCase,
-    private readonly fetchCommentsUsecase: FetchCommentsUseCase,
+    private readonly searchProductUseCase: SearchProductUseCase,
+    private readonly fetchCommentsUseCase: FetchCommentsUseCase,
   ) {}
 
   @Get('search')
@@ -19,7 +19,7 @@ export class AppController {
     @Query() query: SearchProductDTO,
     @Response() res: ExpressResponse,
   ) {
-    const result = await this.searchProductUsecase.fetchProductFromAgent({
+    const result = await this.searchProductUseCase.fetchProductFromAgent({
       searchAgent: query.searchAgent,
       searchTitle: query.searchTitle,
     });
@@ -49,7 +49,7 @@ export class AppController {
     @Query() query: FetchCommentDTO,
     @Response() res: ExpressResponse,
   ) {
-    const result = await this.fetchCommentsUsecase.fetchCommentsFromTarget({
+    const result = await this.fetchCommentsUseCase.fetchCommentsFromTarget({
       productId: query.productId,
       searchAgent: query.searchAgent,
     });

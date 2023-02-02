@@ -1,12 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import axios from 'axios';
 import { Either, left, Result, right } from '../../core/Result';
+import { UnexpectedError } from '../../core/UnexpectedError';
 import { ResultMapper } from '../../mappers/ResultMapper';
 import { SearchProductDTO, DigikalaProductVM } from './SearchProductDTO';
 import { AgentNotFound } from './SearchProductErrors';
 
 // search to get result, select one to choose comments
-type Response = Either<AgentNotFound | Result<DigikalaProductVM>, Result<any>>;
+type Response = Either<
+  AgentNotFound | UnexpectedError,
+  Result<DigikalaProductVM[]>
+>;
 
 @Injectable()
 export class SearchProductUseCase {
@@ -33,7 +37,7 @@ export class SearchProductUseCase {
       const result = ResultMapper.toDigikalaProductVM(axiosResult);
       return right(Result.ok<DigikalaProductVM[]>(result));
     } catch (err) {
-      throw new Error(err);
+      return left(new UnexpectedError('Something went wrong'));
     }
   }
 

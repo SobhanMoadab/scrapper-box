@@ -47,7 +47,7 @@ describe('SearchProductUseCase', () => {
 
     // When i attempt to search for a product,
     const result = await useCase.fetchProductFromAgent(dto);
-    const products = result.value.getValue();
+    const products = result.value.getValue() as DigikalaProductVM[];
 
     // Then product results should be returned successfully
     expect(result.isRight()).toBeTruthy();

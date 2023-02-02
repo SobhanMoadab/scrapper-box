@@ -6,12 +6,16 @@ import { FetchCommentsUseCase } from './usecases/fetchComments/FetchComment';
 import { AgentNotFound } from './usecases/searchProduct/SearchProductErrors';
 import { ProductNotFound } from './usecases/fetchComments/FetchCommentErrors';
 import { Response as ExpressResponse } from 'express';
+import { LoginClientDTO } from './usecases/loginClient/LoginClientDTO';
+import { LoginClientUseCase } from './usecases/loginClient/LoginClient';
+import { InvalidCredential } from './usecases/loginClient/LoginClientErrors';
 
 @Controller()
 export class AppController {
   constructor(
     private readonly searchProductUseCase: SearchProductUseCase,
     private readonly fetchCommentsUseCase: FetchCommentsUseCase,
+    private readonly loginClientUseCase: LoginClientUseCase,
   ) {}
 
   @Get('search')
@@ -19,28 +23,32 @@ export class AppController {
     @Query() query: SearchProductDTO,
     @Response() res: ExpressResponse,
   ) {
-    const result = await this.searchProductUseCase.fetchProductFromAgent({
-      searchAgent: query.searchAgent,
-      searchTitle: query.searchTitle,
-    });
+    try {
+      const result = await this.searchProductUseCase.fetchProductFromAgent({
+        searchAgent: query.searchAgent,
+        searchTitle: query.searchTitle,
+      });
 
-    if (result.isLeft()) {
-      const error = result.value;
+      if (result.isLeft()) {
+        const error = result.value;
 
-      switch (error.constructor) {
-        case AgentNotFound:
-          return res
-            .status(400)
-            .json({ status: 400, result: error.getErrorValue() });
-        default:
-          return res
-            .status(500)
-            .json({ status: 500, result: error.getErrorValue() });
+        switch (error.constructor) {
+          case AgentNotFound:
+            return res
+              .status(400)
+              .json({ status: 400, result: error.getErrorValue() });
+          default:
+            return res
+              .status(500)
+              .json({ status: 500, result: error.getErrorValue() });
+        }
+      } else {
+        return res
+          .status(200)
+          .json({ status: 200, result: result.value.getValue() });
       }
-    } else {
-      return res
-        .status(200)
-        .json({ status: 200, result: result.value.getValue() });
+    } catch (err) {
+      return res.status(500).json({ status: 500, msg: 'Something went wrong' });
     }
   }
 
@@ -49,35 +57,67 @@ export class AppController {
     @Query() query: FetchCommentDTO,
     @Response() res: ExpressResponse,
   ) {
-    const result = await this.fetchCommentsUseCase.fetchCommentsFromTarget({
-      productId: query.productId,
-      searchAgent: query.searchAgent,
-    });
-    if (result.isLeft()) {
-      const error = result.value;
+    try {
+      const result = await this.fetchCommentsUseCase.fetchCommentsFromTarget({
+        productId: query.productId,
+        searchAgent: query.searchAgent,
+      });
+      if (result.isLeft()) {
+        const error = result.value;
 
-      switch (error.constructor) {
-        case AgentNotFound:
-          return res
-            .status(400)
-            .json({ status: 400, result: error.getErrorValue() });
-        case ProductNotFound:
-          return res
-            .status(400)
-            .json({ status: 400, result: error.getErrorValue() });
-        default:
-          return res
-            .status(500)
-            .json({ status: 500, result: error.getErrorValue() });
+        switch (error.constructor) {
+          case AgentNotFound:
+            return res
+              .status(400)
+              .json({ status: 400, result: error.getErrorValue() });
+          case ProductNotFound:
+            return res
+              .status(400)
+              .json({ status: 400, result: error.getErrorValue() });
+          default:
+            return res
+              .status(500)
+              .json({ status: 500, result: error.getErrorValue() });
+        }
+      } else {
+        return res
+          .status(200)
+          .json({ status: 200, result: result.value.getValue() });
       }
-    } else {
-      return res
-        .status(200)
-        .json({ status: 200, result: result.value.getValue() });
+    } catch (err) {
+      return res.status(500).json({ status: 500, msg: 'Something went wrong' });
     }
   }
-  // @Post('login-client')
-  // async loginClient(@Body() body: any, @R) {
-  //   throw new Error();
-  // }
+
+  @Post('login-client')
+  async loginClient(
+    @Body() body: LoginClientDTO,
+    @Response() res: ExpressResponse,
+  ) {
+    try {
+      const result = await this.loginClientUseCase.loginClient({
+        username: body.username,
+        password: body.password,
+        siteUrl: body.siteUrl,
+      });
+      if (result.isLeft()) {
+        const error = result.value;
+
+        switch (error.constructor) {
+          case InvalidCredential:
+            return res
+              .status(400)
+              .json({ status: 400, result: error.getErrorValue() });
+          default:
+            return res
+              .status(500)
+              .json({ status: 500, result: error.getErrorValue() });
+        }
+      } else {
+        return res.status(201).json({ status: 201, result: 'Successful' });
+      }
+    } catch (err) {
+      return res.status(500).json({ status: 500, msg: 'Something went wrong' });
+    }
+  }
 }

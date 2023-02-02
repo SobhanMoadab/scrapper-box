@@ -3,7 +3,7 @@ import { ClientAccount } from '../../ClientAccount';
 import { Either, left, Result, right } from '../../core/Result';
 import { UnexpectedError } from '../../core/UnexpectedError';
 import { LoginClientDTO } from './LoginClientDTO';
-import { InvalidCredential } from './LoginClientErrors';
+import { InvalidCredential, InvalidInput } from './LoginClientErrors';
 
 type Response = Either<
   InvalidCredential | UnexpectedError | Result<any>,
@@ -20,20 +20,27 @@ export class LoginClientUseCase {
       try {
         ClientAccount.create({ username, password });
       } catch (err) {
-        return left(new InvalidCredential());
+        return left(new InvalidInput());
       }
       const wordpressPostfix = '/wp-json/jwt-auth/v1/token';
       const url = siteUrl + wordpressPostfix;
-      const result = await axios.post(
-        url,
-        { username, password },
-        {
-          headers: {
-            'Content-Type': 'application/json',
+
+      try {
+        await axios.post(
+          url,
+          { username, password },
+          {
+            headers: {
+              'Content-Type': 'application/json',
+            },
           },
-        },
-      );
-      return right(Result.ok(result.data));
+        );
+        // save token to database
+      } catch (err) {
+        return left(new InvalidCredential());
+      }
+
+      return right(Result.ok());
     } catch (err) {
       return left(new UnexpectedError('Something went wrong'));
     }

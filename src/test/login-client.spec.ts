@@ -2,7 +2,10 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { AppModule } from '../app.module';
 import { LoginClientUseCase } from '../usecases/loginClient/LoginClient';
 import { LoginClientDTO } from '../usecases/loginClient/LoginClientDTO';
-import { InvalidCredential } from '../usecases/loginClient/LoginClientErrors';
+import {
+  InvalidCredential,
+  InvalidInput,
+} from '../usecases/loginClient/LoginClientErrors';
 
 describe('LoginClientUseCase', () => {
   let useCase: LoginClientUseCase;
@@ -20,12 +23,26 @@ describe('LoginClientUseCase', () => {
     expect(useCase).toBeDefined();
   });
 
-  it('should throw error with wrong input', async () => {
+  it('should throw error with incomplete input', async () => {
     // Given i provide wrong input
     const dto: LoginClientDTO = {
-      username: 'test',
+      username: '',
       password: '',
-      siteUrl: 'test',
+      siteUrl: 'https://urumdental.com',
+    };
+    // When i attempt to login a client
+    const result = await useCase.loginClient(dto);
+    // Then i expect to get error for returned value
+    expect(result.isRight()).toBeFalsy();
+    expect(result.value).toBeInstanceOf(InvalidInput);
+  });
+
+  it('should throw error with wrong credential', async () => {
+    // Given i provide wrong input
+    const dto: LoginClientDTO = {
+      username: 'moadab',
+      password: 'Tx4%',
+      siteUrl: 'https://urumdental.com',
     };
     // When i attempt to login a client
     const result = await useCase.loginClient(dto);
@@ -45,6 +62,5 @@ describe('LoginClientUseCase', () => {
     const result = await useCase.loginClient(dto);
     // Then i expect to get token as a result
     expect(result.isLeft()).toBeFalsy();
-    expect(result.value.getValue()).toHaveProperty('token');
   });
 });

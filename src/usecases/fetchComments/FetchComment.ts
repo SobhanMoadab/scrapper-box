@@ -38,7 +38,6 @@ export class FetchCommentsUseCase {
       return right(Result.ok<DigikalaCommentVM[]>(result));
       // const result = ResultMapper.toDigikalaCommentVM(axiosResult);
     } catch (err) {
-      console.log({ err });
       return left(new UnexpectedError('Something went wrong'));
     }
   }

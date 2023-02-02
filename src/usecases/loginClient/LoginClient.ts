@@ -1,10 +1,14 @@
 import { ClientAccount } from '../../ClientAccount';
+import { Guard } from '../../core/Guard';
 import { Either, left, Result, right } from '../../core/Result';
 import { UnexpectedError } from '../../core/UnexpectedError';
-import { DigikalaCommentVM } from '../fetchComments/FetchCommentDTO';
 import { LoginClientDTO } from './LoginClientDTO';
+import { InvalidCredential } from './LoginClientErrors';
 
-type Response = Either<UnexpectedError | Result<any>, Result<void>>;
+type Response = Either<
+  InvalidCredential | UnexpectedError | Result<any>,
+  Result<void>
+>;
 
 export class LoginClientUseCase {
   constructor() {}
@@ -16,11 +20,14 @@ export class LoginClientUseCase {
     let client: ClientAccount;
 
     try {
-      const clientAccOrError = ClientAccount.create({ username, password });
-      if (clientAccOrError.isFailure) {
-        return left(clientAccOrError);
+      try {
+        const clientAccOrError = ClientAccount.create({ username, password });
+
+        client = clientAccOrError.getValue();
+      } catch (err) {
+        return left(new InvalidCredential());
       }
-      client = clientAccOrError.getValue();
+
       return right(Result.ok());
     } catch (err) {
       return left(new UnexpectedError('Something went wrong'));

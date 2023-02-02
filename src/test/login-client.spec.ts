@@ -3,6 +3,7 @@ import { AppModule } from '../app.module';
 import { ClientAccount } from '../ClientAccount';
 import { LoginClientUseCase } from '../usecases/loginClient/LoginClient';
 import { LoginClientDTO } from '../usecases/loginClient/LoginClientDTO';
+import { InvalidCredential } from '../usecases/loginClient/LoginClientErrors';
 
 describe('LoginClientUseCase', () => {
   let useCase: LoginClientUseCase;
@@ -29,8 +30,10 @@ describe('LoginClientUseCase', () => {
     };
     // When i attempt to login a client
     const result = await useCase.loginClient(dto);
+    console.log({ result });
     // then i expect to get error for returned value
     expect(result.isRight()).toBeFalsy();
+    expect(result.value).toBeInstanceOf(InvalidCredential);
   });
 
   it('should login to the url given', async () => {});

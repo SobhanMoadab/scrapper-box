@@ -11,6 +11,7 @@ describe('LoginClientUseCase', () => {
   let useCase: LoginClientUseCase;
 
   beforeEach(async () => {
+    jest.setTimeout(10000);
     const module: TestingModule = await Test.createTestingModule({
       providers: [],
       imports: [AppModule],
@@ -40,8 +41,8 @@ describe('LoginClientUseCase', () => {
   it('should throw error with wrong credential', async () => {
     // Given i provide wrong input
     const dto: LoginClientDTO = {
-      username: 'moadab',
-      password: 'Tx4%',
+      username: 'test',
+      password: 'test',
       siteUrl: 'https://urumdental.com',
     };
     // When i attempt to login a client
@@ -54,8 +55,8 @@ describe('LoginClientUseCase', () => {
   it('should login to the url given and receive token', async () => {
     // Given i provide correct input
     const dto: LoginClientDTO = {
-      username: 'moadab',
-      password: 'Tx4%GeX7TY#75NmVjBtnul*c',
+      username: process.env.URUM_USERNAME!,
+      password: process.env.URUM_PASSWORD!,
       siteUrl: 'https://urumdental.com',
     };
     // When i attempt to login a client

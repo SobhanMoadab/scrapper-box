@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { Either, left, Result, right } from '../../core/Result';
 import { UnexpectedError } from '../../core/UnexpectedError';
+import { ResultMapper } from '../../mappers/ResultMapper';
 import { AgentNotFound } from '../searchProduct/SearchProductErrors';
 import { DigikalaCommentVM, FetchCommentDTO } from './FetchCommentDTO';
 import { ProductNotFound } from './FetchCommentErrors';
@@ -32,11 +33,11 @@ export class FetchCommentsUseCase {
       const axiosResult = await axios.get(
         `https://api.digikala.com/v1/product/${productId}/comments/?page=1`,
       );
-      console.log({ axiosResult: axiosResult.data?.data?.comments });
       if (axiosResult.data?.status !== 200) {
         return left(new ProductNotFound());
       }
-      return right(Result.ok());
+      const result = ResultMapper.toDigikalaCommentVM(axiosResult);
+      return right(Result.ok<DigikalaCommentVM[]>(result));
       // const result = ResultMapper.toDigikalaCommentVM(axiosResult);
     } catch (err) {
       console.log({ err });

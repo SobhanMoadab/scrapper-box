@@ -33,4 +33,26 @@ describe('Fetch comments usecase', () => {
     expect(error).toBeInstanceOf(ProductNotFound);
     expect(result.isRight()).toBeFalsy();
   });
+
+  it('should return proper data with correct input', async () => {
+    // Given i provide proper input
+    const validDTO: FetchCommentDTO = {
+      productId: '8366616',
+      searchAgent: 'digikala',
+    };
+    // When i attempt to fetch comments from targeted site
+    const result = await useCase.fetchCommentsFromTarget(validDTO);
+    const comments = result.value.getValue();
+
+    // Then i expect to get error as returned value
+    expect(result.isLeft()).toBeFalsy();
+    comments.forEach((element: any) => {
+      expect(element).toHaveProperty('id');
+      expect(element).toHaveProperty('title');
+      expect(element).toHaveProperty('body');
+      expect(element).toHaveProperty('rate');
+      expect(element).toHaveProperty('user_name');
+      expect(element).toHaveProperty('recommendation_status');
+    });
+  });
 });

@@ -48,7 +48,7 @@ export class SearchProductUseCase {
       const axiosResult = await axios.get(agent.search + searchTitle);
       // map result
       const result = ResultMapper.toDigikalaProductVM(axiosResult);
-      return right(Result.ok<DigikalaProductVM>(result));
+      return right(Result.ok<DigikalaProductVM[]>(result));
     } catch (err) {
       throw new Error(err);
     }

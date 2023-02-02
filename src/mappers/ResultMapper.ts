@@ -9,12 +9,24 @@ export class ResultMapper {
     }, {});
   }
 
-  public static toDigikalaProductVM(result: any): DigikalaProductVM {
-    return result.data.data.products
+  public static toDigikalaProductVM(result: any): DigikalaProductVM[] {
+    return result?.data?.data?.products
       .map((p: any) => this.pick(p, 'id', 'title_fa', 'title_en'))
       .filter((item: any, index: any) => index < 5);
   }
-  public static toDigikalaCommentVM(result: any): DigikalaCommentVM {
-    throw new Error();
+  public static toDigikalaCommentVM(result: any): DigikalaCommentVM[] {
+    return result?.data?.data?.comments
+      .map((p: any) =>
+        this.pick(
+          p,
+          'id',
+          'title',
+          'body',
+          'rate',
+          'user_name',
+          'recommendation_status',
+        ),
+      )
+      .filter((item: any, index: any) => index < 5);
   }
 }

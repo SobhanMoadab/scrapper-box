@@ -12,7 +12,7 @@ describe('SearchProductUseCase', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [SearchProductUseCase],
+      providers: [SearchProductUseCase, SearchProductUseCase],
       imports: [AppModule],
     }).compile();
 

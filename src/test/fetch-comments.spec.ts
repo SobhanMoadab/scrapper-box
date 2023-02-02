@@ -3,13 +3,14 @@ import { AppModule } from '../app.module';
 import { FetchCommentDTO } from '../usecases/fetchComments/FetchCommentDTO';
 import { FetchCommentsUseCase } from '../usecases/fetchComments/FetchComment';
 import { ProductNotFound } from '../usecases/fetchComments/FetchCommentErrors';
+import { SearchProductUseCase } from '../usecases/searchProduct/SearchProduct';
 
 describe('Fetch comments usecase', () => {
   let useCase: FetchCommentsUseCase;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [FetchCommentsUseCase],
+      providers: [FetchCommentsUseCase, SearchProductUseCase],
       imports: [AppModule],
     }).compile();
 

@@ -1,6 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AppModule } from '../app.module';
-import { ClientAccount } from '../ClientAccount';
 import { LoginClientUseCase } from '../usecases/loginClient/LoginClient';
 import { LoginClientDTO } from '../usecases/loginClient/LoginClientDTO';
 import { InvalidCredential } from '../usecases/loginClient/LoginClientErrors';
@@ -35,7 +34,7 @@ describe('LoginClientUseCase', () => {
     expect(result.value).toBeInstanceOf(InvalidCredential);
   });
 
-  it('should login to the url given', async () => {
+  it('should login to the url given and receive token', async () => {
     // Given i provide correct input
     const dto: LoginClientDTO = {
       username: 'moadab',

@@ -76,8 +76,8 @@ export class AppController {
         .json({ status: 200, result: result.value.getValue() });
     }
   }
-  @Post('login-client')
-  async loginClient(@Body() body: any) {
-    throw new Error();
-  }
+  // @Post('login-client')
+  // async loginClient(@Body() body: any, @R) {
+  //   throw new Error();
+  // }
 }

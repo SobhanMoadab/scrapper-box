@@ -19,8 +19,6 @@ export class FetchCommentsUseCase {
     },
   };
 
-  constructor() {}
-
   async fetchCommentsFromTarget({
     productId,
     searchAgent,

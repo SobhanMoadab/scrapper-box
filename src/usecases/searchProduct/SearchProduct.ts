@@ -17,23 +17,6 @@ export class SearchProductUseCase {
     },
   };
 
-  // async searchTitleFromDigikala(searchTitle: string) {
-  //   try {
-  //     const result = await axios.get(``);
-  //     const products = this.digikalaMapper(result);
-
-  //     return products;
-  //     // return result.data.data.products.filter(
-  //     //   (item: any, index: any) => index < 5,
-  //     // );
-  //   } catch (err) {
-  //     throw new Error('Could not get result from digikala API');
-  //   }
-  // }
-  // async fetchCommentsFromAgent({ productId }: FetchCommentDTO) {
-  //   const result = await axios.get(url);
-  //   return result.data.data.comments;
-  // }
   async fetchProductFromAgent({
     searchAgent,
     searchTitle,

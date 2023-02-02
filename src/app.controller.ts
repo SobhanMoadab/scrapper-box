@@ -20,6 +20,6 @@ export class AppController {
       searchAgent: query.searchAgent,
       searchTitle: query.searchTitle,
     });
-    return queryResult;
+    return queryResult.value.getValue();
   }
 }

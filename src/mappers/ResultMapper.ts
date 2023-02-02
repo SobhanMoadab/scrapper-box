@@ -1,3 +1,4 @@
+import { DigikalaCommentVM } from '../usecases/fetchComments/FetchCommentDTO';
 import { DigikalaProductVM } from '../usecases/searchProduct/SearchProductDTO';
 
 export class ResultMapper {
@@ -8,9 +9,12 @@ export class ResultMapper {
     }, {});
   }
 
-  public static toDigikalaVM(result: any): DigikalaProductVM {
+  public static toDigikalaProductVM(result: any): DigikalaProductVM {
     return result.data.data.products
       .map((p: any) => this.pick(p, 'id', 'title_fa', 'title_en'))
       .filter((item: any, index: any) => index < 5);
+  }
+  public static toDigikalaCommentVM(result: any): DigikalaCommentVM {
+    throw new Error();
   }
 }

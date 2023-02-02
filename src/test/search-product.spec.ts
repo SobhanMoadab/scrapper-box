@@ -34,7 +34,7 @@ describe('SearchProductUseCase', () => {
     // When i attempt to search for a product
     const result = await useCase.fetchProductFromAgent(dto);
     expect(result.isRight()).toBeFalsy();
-    // Then product results should be returned successfully
+    // Then product results should instance of AgentNotFound error class
     expect(result.value).toBeInstanceOf(AgentNotFound);
   });
 
@@ -48,10 +48,6 @@ describe('SearchProductUseCase', () => {
     // When i attempt to search for a product,
     const result = await useCase.fetchProductFromAgent(dto);
     const products = result.value.getValue();
-    console.log(
-      '🚀 ~ file: search-product.spec.ts:51 ~ it ~ products',
-      products,
-    );
 
     // Then product results should be returned successfully
     expect(result.isRight()).toBeTruthy();

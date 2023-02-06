@@ -3,13 +3,16 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { AppModule } from '../app.module';
 import { TransferCommentUseCase } from '../usecases/transferComments/TransferComment';
 import { TransferCommentDTO } from '../usecases/transferComments/TransferCommentDTO';
+import { InvalidTransferCommentDTO } from '../usecases/transferComments/TransferCommentErrors';
 import { CONSTANTS } from '../utils/constants';
 
 describe('Transfer comments useCase', () => {
   let useCase: TransferCommentUseCase;
+  let randomString: string;
 
   beforeEach(async () => {
     jest.setTimeout(6000);
+    randomString = (Math.random() + 1).toString(36).substring(7);
     const module: TestingModule = await Test.createTestingModule({
       providers: [],
       imports: [AppModule],
@@ -23,12 +26,12 @@ describe('Transfer comments useCase', () => {
   });
 
   // given i provide invalid input, i should get error
-  it('should throw badrequest exception, when provided with invalid data', async () => {
+  it('should throw bad request exception, when provided with invalid data', async () => {
     const dto: TransferCommentDTO = {
       token: '',
       baseUrl: CONSTANTS.URUM_DENTAL_URL,
       comment: {
-        author_email: 's12@test.com',
+        author_email: `${randomString}@gmail.com`,
         author_name: 'sobhan',
         content: 'test',
         post: '3860',
@@ -38,15 +41,15 @@ describe('Transfer comments useCase', () => {
     const result = await useCase.transferComment(dto);
     // then i expect result to be instance of bad excetion class
     expect(result.isRight()).toBeFalsy();
-    expect(result.value).toBeInstanceOf(BadRequestException);
+    expect(result.value).toBeInstanceOf(InvalidTransferCommentDTO);
   });
 
   it('should respond correctly, when provided with valid data', async () => {
     const dto: TransferCommentDTO = {
-      token: 'test',
+      token: process.env.URUM_TOKEN!,
       baseUrl: CONSTANTS.URUM_DENTAL_URL,
       comment: {
-        author_email: 'sobh@test.com',
+        author_email: `${randomString}@gmail.com`,
         author_name: 'sobhan',
         content: 'test',
         post: '3860',

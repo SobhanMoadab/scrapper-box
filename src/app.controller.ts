@@ -10,6 +10,8 @@ import { LoginClientDTO } from './usecases/loginClient/LoginClientDTO';
 import { LoginClientUseCase } from './usecases/loginClient/LoginClient';
 import { InvalidCredential } from './usecases/loginClient/LoginClientErrors';
 import { TransferCommentDTO } from './usecases/transferComments/TransferCommentDTO';
+import { TransferCommentUseCase } from './usecases/transferComments/TransferComment';
+import { InvalidTransferCommentDTO } from './usecases/transferComments/TransferCommentErrors';
 
 @Controller()
 export class AppController {
@@ -17,6 +19,7 @@ export class AppController {
     private readonly searchProductUseCase: SearchProductUseCase,
     private readonly fetchCommentsUseCase: FetchCommentsUseCase,
     private readonly loginClientUseCase: LoginClientUseCase,
+    private readonly transferCommentUseCase: TransferCommentUseCase,
   ) {}
 
   @Get('search')
@@ -126,5 +129,31 @@ export class AppController {
   async transferComment(
     @Body() body: TransferCommentDTO,
     @Response() res: ExpressResponse,
-  ) {}
+  ) {
+    try {
+      const result = await this.transferCommentUseCase.transferComment({
+        baseUrl: body.baseUrl,
+        comment: body.comment,
+        token: body.token,
+      });
+      if (result.isLeft()) {
+        const error = result.value;
+
+        switch (error.constructor) {
+          case InvalidTransferCommentDTO:
+            return res
+              .status(400)
+              .json({ status: 400, result: error.getErrorValue() });
+          default:
+            return res
+              .status(500)
+              .json({ status: 500, result: error.getErrorValue() });
+        }
+      } else {
+        return res.status(201).json({ status: 201, result: 'Successful' });
+      }
+    } catch (err) {
+      return res.status(500).json({ status: 500, msg: 'Something went wrong' });
+    }
+  }
 }

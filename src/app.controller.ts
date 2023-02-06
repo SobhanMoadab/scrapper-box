@@ -9,6 +9,7 @@ import { Response as ExpressResponse } from 'express';
 import { LoginClientDTO } from './usecases/loginClient/LoginClientDTO';
 import { LoginClientUseCase } from './usecases/loginClient/LoginClient';
 import { InvalidCredential } from './usecases/loginClient/LoginClientErrors';
+import { TransferCommentDTO } from './usecases/transferComments/TransferCommentDTO';
 
 @Controller()
 export class AppController {
@@ -120,4 +121,10 @@ export class AppController {
       return res.status(500).json({ status: 500, msg: 'Something went wrong' });
     }
   }
+
+  @Post('transfer-comment')
+  async transferComment(
+    @Body() body: TransferCommentDTO,
+    @Response() res: ExpressResponse,
+  ) {}
 }

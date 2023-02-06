@@ -4,7 +4,7 @@ import { FetchCommentsUseCase } from './usecases/fetchComments/FetchComment';
 import { LoginClientUseCase } from './usecases/loginClient/LoginClient';
 import { SearchProductUseCase } from './usecases/searchProduct/SearchProduct';
 import { ConfigModule } from '@nestjs/config';
-import { TransferCommentsUseCase } from './usecases/transferComments/TransferComments';
+import { TransferCommentsUseCase } from './usecases/transferComments/TransferComment';
 
 @Module({
   imports: [ConfigModule.forRoot()],

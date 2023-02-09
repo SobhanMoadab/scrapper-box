@@ -104,6 +104,7 @@ export class AppController {
         password: body.password,
         siteUrl: body.siteUrl,
       });
+      const value = result.value.getValue();
       if (result.isLeft()) {
         const error = result.value;
 
@@ -118,10 +119,12 @@ export class AppController {
               .json({ status: 500, result: error.getErrorValue() });
         }
       } else {
-        return res.status(201).json({ status: 201, result: 'Successful' });
+        return res.status(200).json({ status: 200, result: value });
       }
     } catch (err) {
-      return res.status(500).json({ status: 500, msg: 'Something went wrong' });
+      return res
+        .status(500)
+        .json({ status: 500, result: 'Something went wrong' });
     }
   }
 
@@ -132,7 +135,7 @@ export class AppController {
   ) {
     try {
       const result = await this.transferCommentUseCase.transferComment({
-        baseUrl: body.baseUrl,
+        siteUrl: body.siteUrl,
         comment: body.comment,
         token: body.token,
       });
@@ -150,7 +153,7 @@ export class AppController {
               .json({ status: 500, result: error.getErrorValue() });
         }
       } else {
-        return res.status(201).json({ status: 201, result: 'Successful' });
+        return res.status(200).json({ status: 200, result: 'Successful' });
       }
     } catch (err) {
       return res.status(500).json({ status: 500, msg: 'Something went wrong' });

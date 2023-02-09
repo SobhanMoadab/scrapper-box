@@ -6,6 +6,6 @@ export type WordPressComment = {
 };
 export type TransferCommentDTO = {
   token: string;
-  baseUrl: string;
+  siteUrl: string;
   comment: WordPressComment;
 };

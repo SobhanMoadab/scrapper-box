@@ -7,7 +7,7 @@ import { InvalidCredential, InvalidInput } from './LoginClientErrors';
 
 type Response = Either<
   InvalidCredential | UnexpectedError | Result<any>,
-  Result<void>
+  Result<string>
 >;
 
 export class LoginClientUseCase {
@@ -24,23 +24,18 @@ export class LoginClientUseCase {
       }
       const wordpressPostfix = '/wp-json/jwt-auth/v1/token';
       const url = siteUrl + wordpressPostfix;
-
-      try {
-        await axios.post(
-          url,
-          { username, password },
-          {
-            headers: {
-              'Content-Type': 'application/json',
-            },
+      const resultOrError = await axios.post(
+        url,
+        { username, password },
+        {
+          headers: {
+            'Content-Type': 'application/json',
           },
-        );
-        // save token to database
-      } catch (err) {
-        return left(new InvalidCredential());
-      }
+        },
+      );
+      if (!resultOrError.data.token) return left(new InvalidCredential());
 
-      return right(Result.ok());
+      return right(Result.ok(resultOrError.data.token));
     } catch (err) {
       return left(new UnexpectedError('Something went wrong'));
     }

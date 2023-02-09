@@ -18,14 +18,13 @@ export class TransferCommentUseCase {
         return left(new InvalidTransferCommentDTO());
       }
 
-      const url = dto.baseUrl + CONSTANTS.WORDPRESS_COMMENT_POSTFIX;
-      const result = await axios.post(url, JSON.stringify(dto.comment), {
+      const url = dto.siteUrl + CONSTANTS.WORDPRESS_COMMENT_POSTFIX;
+      await axios.post(url, JSON.stringify(dto.comment), {
         headers: {
           'Content-Type': 'application/json',
-          Authorization: dto?.token,
+          Authorization: `Bearer ${dto?.token}`,
         },
       });
-      console.log({ 1111: result.data });
       return right(Result.ok());
     } catch (err) {
       console.log({ err });

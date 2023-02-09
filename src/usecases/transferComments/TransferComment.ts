@@ -27,7 +27,6 @@ export class TransferCommentUseCase {
       });
       return right(Result.ok());
     } catch (err) {
-      console.log({ err });
       return left(new UnexpectedError('Something went wrong'));
     }
   }

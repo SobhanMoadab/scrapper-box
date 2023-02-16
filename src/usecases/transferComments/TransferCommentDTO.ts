@@ -1,4 +1,4 @@
-export type WordPressProductComment = {
+export type WordPressPostComment = {
   post: string;
   author_name: string;
   author_email: string;
@@ -8,9 +8,9 @@ export type TransferCommentDTO = {
   siteUrl: string;
   contentType: string;
   token: string;
-  comment: WordPressProductComment;
+  comment: WordPressProductComment | WordPressPostComment;
 };
-export type WordPressPostComment = {
+export type WordPressProductComment = {
   product_id: string;
   review: string;
   reviewer: string;

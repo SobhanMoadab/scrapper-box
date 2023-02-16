@@ -14,7 +14,7 @@ describe('Transfer comments useCase', () => {
   let randomString: string;
 
   beforeEach(async () => {
-    jest.setTimeout(9000);
+    jest.setTimeout(10000);
     randomString = (Math.random() + 1).toString(36).substring(7);
     const module: TestingModule = await Test.createTestingModule({
       providers: [],
@@ -69,6 +69,34 @@ describe('Transfer comments useCase', () => {
         reviewer: `${randomString}`,
         reviewer_email: `${randomString}@gmail.com`,
         rating: 5,
+      },
+    };
+    // when i attempt to transfer comments
+    const result = await useCase.transferComment(dto);
+
+    // then i expect result to be correct
+    expect(result.isLeft()).toBeFalsy();
+  });
+
+  it('should respond correctly, when provided with valid post data', async () => {
+    const loginDto: LoginClientDTO = {
+      username: process.env.URUM_USERNAME!,
+      password: process.env.URUM_PASSWORD!,
+      siteUrl: 'https://urumdental.com',
+    };
+
+    const loginResult = await loginUseCase.loginClient(loginDto);
+    const token: string = loginResult.value.getValue();
+
+    const dto: TransferCommentDTO = {
+      contentType: 'PRODUCT',
+      token: token,
+      siteUrl: CONSTANTS.URUM_DENTAL_URL,
+      comment: {
+        author_email: `${randomString}@gmail.com`,
+        author_name: 'sobhan',
+        content: 'test',
+        post: '3860',
       },
     };
     // when i attempt to transfer comments

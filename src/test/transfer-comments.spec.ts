@@ -12,9 +12,14 @@ describe('Transfer comments useCase', () => {
   let useCase: TransferCommentUseCase;
   let loginUseCase: LoginClientUseCase;
   let randomString: string;
+  let token: string;
 
+  const loginDto: LoginClientDTO = {
+    username: process.env.URUM_USERNAME!,
+    password: process.env.URUM_PASSWORD!,
+    siteUrl: 'https://urumdental.com',
+  };
   beforeEach(async () => {
-    jest.setTimeout(10000);
     randomString = (Math.random() + 1).toString(36).substring(7);
     const module: TestingModule = await Test.createTestingModule({
       providers: [],
@@ -50,14 +55,8 @@ describe('Transfer comments useCase', () => {
   });
 
   it('should respond correctly, when provided with valid product data', async () => {
-    const loginDto: LoginClientDTO = {
-      username: process.env.URUM_USERNAME!,
-      password: process.env.URUM_PASSWORD!,
-      siteUrl: 'https://urumdental.com',
-    };
-
     const loginResult = await loginUseCase.loginClient(loginDto);
-    const token: string = loginResult.value.getValue();
+    token = loginResult.value.getValue();
 
     const dto: TransferCommentDTO = {
       contentType: 'PRODUCT',
@@ -76,20 +75,14 @@ describe('Transfer comments useCase', () => {
 
     // then i expect result to be correct
     expect(result.isLeft()).toBeFalsy();
-  });
+  }, 12_000);
 
   it('should respond correctly, when provided with valid post data', async () => {
-    const loginDto: LoginClientDTO = {
-      username: process.env.URUM_USERNAME!,
-      password: process.env.URUM_PASSWORD!,
-      siteUrl: 'https://urumdental.com',
-    };
-
     const loginResult = await loginUseCase.loginClient(loginDto);
-    const token: string = loginResult.value.getValue();
+    token = loginResult.value.getValue();
 
     const dto: TransferCommentDTO = {
-      contentType: 'PRODUCT',
+      contentType: 'POST',
       token: token,
       siteUrl: CONSTANTS.URUM_DENTAL_URL,
       comment: {
@@ -104,5 +97,5 @@ describe('Transfer comments useCase', () => {
 
     // then i expect result to be correct
     expect(result.isLeft()).toBeFalsy();
-  });
+  }, 12_000);
 });

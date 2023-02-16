@@ -33,6 +33,10 @@ export class TransferCommentUseCase {
           Authorization: `Bearer ${dto?.token}`,
         },
       });
+      console.log(
+        '🚀 ~ file: TransferComment.ts:36 ~ TransferCommentUseCase ~ result ~ result',
+        result.status,
+      );
       return right(Result.ok());
     } catch (err) {
       return left(new UnexpectedError('Something went wrong'));

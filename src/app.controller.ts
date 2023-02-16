@@ -138,6 +138,7 @@ export class AppController {
         siteUrl: body.siteUrl,
         comment: body.comment,
         token: body.token,
+        contentType: body.contentType,
       });
       if (result.isLeft()) {
         const error = result.value;

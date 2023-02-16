@@ -29,6 +29,7 @@ describe('Transfer comments useCase', () => {
   it('should throw bad request exception, when provided with invalid data', async () => {
     const dto: TransferCommentDTO = {
       token: '',
+      contentType: 'PRODUCT',
       siteUrl: CONSTANTS.URUM_DENTAL_URL,
       comment: {
         author_email: `${randomString}@gmail.com`,
@@ -46,13 +47,14 @@ describe('Transfer comments useCase', () => {
 
   it('should respond correctly, when provided with valid data', async () => {
     const dto: TransferCommentDTO = {
-      token: process.env.URUM_TOKEN!,
+      contentType: 'PRODUCT',
+      token: 'Bearer ' + process.env.URUM_TOKEN!,
       siteUrl: CONSTANTS.URUM_DENTAL_URL,
       comment: {
         author_email: `${randomString}@gmail.com`,
         author_name: 'sobhan',
         content: 'test',
-        post: '3860',
+        post: '5848',
       },
     };
     // when i attempt to transfer comments

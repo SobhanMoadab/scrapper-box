@@ -13,12 +13,17 @@ type Response = Either<
 
 export class TransferCommentUseCase {
   async transferComment(dto: TransferCommentDTO): Promise<Response> {
+    console.log({ dto });
     try {
       if (!dto.token) {
         return left(new InvalidTransferCommentDTO());
       }
+      const postFix =
+        dto.contentType === 'PRODUCT'
+          ? CONSTANTS.WORDPRESS_PRODUCT_REVIEWS_POSTFIX
+          : CONSTANTS.WORDPRESS_COMMENT_POSTFIX;
 
-      const url = dto.siteUrl + CONSTANTS.WORDPRESS_COMMENT_POSTFIX;
+      const url = dto.siteUrl + postFix;
       await axios.post(url, JSON.stringify(dto.comment), {
         headers: {
           'Content-Type': 'application/json',
@@ -27,6 +32,7 @@ export class TransferCommentUseCase {
       });
       return right(Result.ok());
     } catch (err) {
+      console.log({ err });
       return left(new UnexpectedError('Something went wrong'));
     }
   }

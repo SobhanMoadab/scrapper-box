@@ -12,7 +12,6 @@ import { InvalidCredential } from './usecases/loginClient/LoginClientErrors';
 import { TransferCommentDTO } from './usecases/transferComments/TransferCommentDTO';
 import { TransferCommentUseCase } from './usecases/transferComments/TransferComment';
 import { InvalidTransferCommentDTO } from './usecases/transferComments/TransferCommentErrors';
-
 @Controller()
 export class AppController {
   constructor(

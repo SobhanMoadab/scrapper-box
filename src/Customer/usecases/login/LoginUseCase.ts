@@ -5,13 +5,19 @@ import { ICustomerRepository } from '../../repos/ICustomerRepository';
 import { LoginDTO } from './LoginDTO';
 import { Customer404, InvalidInput } from './LoginErrors';
 import { sign } from 'jsonwebtoken';
+import { Inject, Injectable } from '@nestjs/common';
+import { CustomerRepository } from '../../repos/implementation/mongooseCustomer';
 type Response = Either<
   UnexpectedError | InvalidInput | Customer404,
   Result<string>
 >;
+
+@Injectable()
 export class LoginUseCase {
-  constructor(public customerRepo: ICustomerRepository) {}
-  async execute(dto: LoginDTO): Promise<Response> {
+  constructor(
+    @Inject(CustomerRepository) public customerRepo: ICustomerRepository,
+  ) {}
+  async login(dto: LoginDTO): Promise<Response> {
     let customer: Customer;
 
     const customerOrError = Customer.create(dto);
@@ -30,12 +36,11 @@ export class LoginUseCase {
       } catch (err) {
         return left(new Customer404());
       }
-      const token = sign(customer.props, process.env.UTILITY_SECRET!, {
+      const token = sign({ ...dto }, process.env.UTILITY_SECRET!, {
         expiresIn: 600,
       });
       return right(Result.ok(token));
     } catch (err) {
-      console.log(1111, err);
       return left(new UnexpectedError('Something went wrong'));
     }
   }

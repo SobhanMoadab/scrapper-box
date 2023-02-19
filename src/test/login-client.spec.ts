@@ -47,6 +47,7 @@ describe('LoginClientUseCase', () => {
     };
     // When i attempt to login a client
     const result = await useCase.loginClient(dto);
+    console.log('🚀 ~ file: login-client.spec.ts:50 ~ it ~ result', result);
     // Then i expect to get error for returned value
     expect(result.isRight()).toBeFalsy();
     expect(result.value).toBeInstanceOf(InvalidCredential);

@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import { ClientAccount } from '../../ClientAccount';
 import { Either, left, Result, right } from '../../core/Result';
 import { UnexpectedError } from '../../core/UnexpectedError';
@@ -24,18 +24,22 @@ export class LoginClientUseCase {
       }
       const wordpressPostfix = '/wp-json/jwt-auth/v1/token';
       const url = siteUrl + wordpressPostfix;
-      const resultOrError = await axios.post(
-        url,
-        { username, password },
-        {
-          headers: {
-            'Content-Type': 'application/json',
+      let axiosResult: AxiosResponse;
+      try {
+        axiosResult = await axios.post(
+          url,
+          { username, password },
+          {
+            headers: {
+              'Content-Type': 'application/json',
+            },
           },
-        },
-      );
-      if (!resultOrError.data.token) return left(new InvalidCredential());
+        );
+      } catch (err) {
+        return left(new InvalidCredential());
+      }
 
-      return right(Result.ok(resultOrError.data.token));
+      return right(Result.ok(axiosResult.data.token));
     } catch (err) {
       return left(new UnexpectedError('Something went wrong'));
     }

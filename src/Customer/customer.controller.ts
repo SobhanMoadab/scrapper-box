@@ -55,27 +55,27 @@ export class CustomerController {
     @Response() res: ExpressResponse,
   ) {
     try {
-      const result = await this.profileUseCase.saveProfile({
-        username: body.username,
-        password: body.password,
-        siteUrl: body.siteUrl,
-      });
-      const value = result.value.getValue();
+      const result = await this.profileUseCase.saveProfile(body);
+      const value = result.value;
       if (result.isLeft()) {
         const error = result.value;
-
         switch (error.constructor) {
+          case Customer404:
+            return res
+              .status(400)
+              .json({ status: 400, result: error.getErrorValue() });
           case InvalidCredential:
             return res
               .status(400)
               .json({ status: 400, result: error.getErrorValue() });
+
           default:
             return res
               .status(500)
               .json({ status: 500, result: error.getErrorValue() });
         }
       } else {
-        return res.status(200).json({ status: 200, result: value });
+        return res.status(200).json({ status: 200, result: value.getValue() });
       }
     } catch (err) {
       return res

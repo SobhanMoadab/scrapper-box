@@ -1,9 +1,8 @@
 import { Model } from 'mongoose';
-import { CustomerProps } from '../../domain/Customer';
+import { Customer, CustomerProps } from '../../domain/Customer';
 import { ICustomerRepository } from '../ICustomerRepository';
 import { InjectModel } from '@nestjs/mongoose';
 import { Injectable } from '@nestjs/common';
-import { CustomerModel } from '../../../infra/database/models/Customer';
 @Injectable()
 export class CustomerRepository implements ICustomerRepository {
   constructor(
@@ -15,5 +14,19 @@ export class CustomerRepository implements ICustomerRepository {
     const founded = await this.customerModel.findOne({ username }).lean();
     if (founded) return true;
     else return false;
+  }
+  async findByUsername(username: string): Promise<Customer> {
+    const founded = await this.customerModel.findOne({ username });
+    if (!founded) throw new Error();
+    return Customer.create(founded).getValue();
+  }
+  async save(customer: Customer): Promise<void> {
+    await this.customerModel.findOneAndUpdate(
+      {
+        username: customer.props.username,
+      },
+      customer.props,
+      { upsert: true },
+    );
   }
 }

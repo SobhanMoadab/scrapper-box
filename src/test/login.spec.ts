@@ -3,7 +3,6 @@ import { Customer404 } from '../Customer/usecases/login/LoginErrors';
 import { LoginUseCase } from '../Customer/usecases/login/LoginUseCase';
 import { InvalidInput } from '../Customer/usecases/login/LoginErrors';
 import { ICustomerRepository } from '../Customer/repos/ICustomerRepository';
-import { Customer } from '../Customer/domain/Customer';
 import { verify } from 'jsonwebtoken';
 
 describe('login to utility-box', () => {

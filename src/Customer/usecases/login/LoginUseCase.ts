@@ -14,6 +14,10 @@ export class LoginUseCase {
   async execute(dto: LoginDTO): Promise<Response> {
     try {
       let customer: Customer;
+      const customerOrError = Customer.create(dto);
+      if (customerOrError.isFailure) {
+        return left(new InvalidInput());
+      }
       try {
         customer = await this.customerRepo.findByUsername(dto.username);
       } catch (err) {

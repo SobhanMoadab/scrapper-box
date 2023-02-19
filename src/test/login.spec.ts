@@ -26,6 +26,7 @@ describe('login to utility-box', () => {
       username: 'test',
     };
     // when i attempt to login
+    const result = await useCase.execute()
     // i expect result to be instance of error
   });
 });

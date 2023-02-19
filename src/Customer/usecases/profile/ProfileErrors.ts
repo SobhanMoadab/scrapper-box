@@ -1,5 +1,5 @@
-import { Result } from '../../core/Result';
-import { UseCaseError } from '../../core/UseCaseError';
+import { Result } from '../../../core/Result';
+import { UseCaseError } from '../../../core/UseCaseError';
 
 export class InvalidInput extends Result<UseCaseError> {
   constructor() {

@@ -6,9 +6,7 @@ import { FetchCommentsUseCase } from './usecases/fetchComments/FetchComment';
 import { AgentNotFound } from './usecases/searchProduct/SearchProductErrors';
 import { ProductNotFound } from './usecases/fetchComments/FetchCommentErrors';
 import { Response as ExpressResponse } from 'express';
-import { LoginClientDTO } from './usecases/loginClient/LoginClientDTO';
-import { LoginClientUseCase } from './usecases/loginClient/LoginClient';
-import { InvalidCredential } from './usecases/loginClient/LoginClientErrors';
+import { InvalidCredential } from './Customer/usecases/profile/ProfileErrors';
 import { TransferCommentDTO } from './usecases/transferComments/TransferCommentDTO';
 import { TransferCommentUseCase } from './usecases/transferComments/TransferComment';
 import { InvalidTransferCommentDTO } from './usecases/transferComments/TransferCommentErrors';
@@ -17,7 +15,6 @@ export class AppController {
   constructor(
     private readonly searchProductUseCase: SearchProductUseCase,
     private readonly fetchCommentsUseCase: FetchCommentsUseCase,
-    private readonly loginClientUseCase: LoginClientUseCase,
     private readonly transferCommentUseCase: TransferCommentUseCase,
   ) {}
 
@@ -89,41 +86,6 @@ export class AppController {
       }
     } catch (err) {
       return res.status(500).json({ status: 500, msg: 'Something went wrong' });
-    }
-  }
-
-  @Post('login-client')
-  async loginClient(
-    @Body() body: LoginClientDTO,
-    @Response() res: ExpressResponse,
-  ) {
-    try {
-      const result = await this.loginClientUseCase.loginClient({
-        username: body.username,
-        password: body.password,
-        siteUrl: body.siteUrl,
-      });
-      const value = result.value.getValue();
-      if (result.isLeft()) {
-        const error = result.value;
-
-        switch (error.constructor) {
-          case InvalidCredential:
-            return res
-              .status(400)
-              .json({ status: 400, result: error.getErrorValue() });
-          default:
-            return res
-              .status(500)
-              .json({ status: 500, result: error.getErrorValue() });
-        }
-      } else {
-        return res.status(200).json({ status: 200, result: value });
-      }
-    } catch (err) {
-      return res
-        .status(500)
-        .json({ status: 500, result: 'Something went wrong' });
     }
   }
 

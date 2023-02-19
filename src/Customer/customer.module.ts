@@ -7,12 +7,13 @@ import {
   CustomerSchema,
 } from '../infra/database/models/Customer';
 import { LoginUseCase } from './usecases/login/LoginUseCase';
+import { ProfileUseCase } from './usecases/profile/ProfileUseCase';
 
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: 'Customer', schema: CustomerSchema }]),
   ],
   controllers: [CustomerController],
-  providers: [LoginUseCase, CustomerRepository],
+  providers: [LoginUseCase, CustomerRepository, ProfileUseCase],
 })
 export class CustomerModule {}

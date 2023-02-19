@@ -1,21 +1,21 @@
 import axios, { AxiosResponse } from 'axios';
-import { ClientAccount } from '../../ClientAccount';
-import { Either, left, Result, right } from '../../core/Result';
-import { UnexpectedError } from '../../core/UnexpectedError';
-import { LoginClientDTO } from './LoginClientDTO';
-import { InvalidCredential, InvalidInput } from './LoginClientErrors';
+import { ClientAccount } from '../../../ClientAccount';
+import { Either, left, Result, right } from '../../../core/Result';
+import { UnexpectedError } from '../../../core/UnexpectedError';
+import { ProfileDTO } from './ProfileDTO';
+import { InvalidCredential, InvalidInput } from './ProfileErrors';
 
 type Response = Either<
   InvalidCredential | UnexpectedError | Result<any>,
   Result<string>
 >;
 
-export class LoginClientUseCase {
-  async loginClient({
+export class ProfileUseCase {
+  async saveProfile({
     username,
     password,
     siteUrl,
-  }: LoginClientDTO): Promise<Response> {
+  }: ProfileDTO): Promise<Response> {
     try {
       try {
         ClientAccount.create({ username, password });

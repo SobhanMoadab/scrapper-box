@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { FetchCommentsUseCase } from './usecases/fetchComments/FetchComment';
-import { LoginClientUseCase } from './usecases/loginClient/LoginClient';
 import { SearchProductUseCase } from './usecases/searchProduct/SearchProduct';
 import { ConfigModule } from '@nestjs/config';
 import { TransferCommentUseCase } from './usecases/transferComments/TransferComment';
@@ -19,7 +18,6 @@ import { CustomerModule } from './Customer/customer.module';
   providers: [
     SearchProductUseCase,
     FetchCommentsUseCase,
-    LoginClientUseCase,
     TransferCommentUseCase,
   ],
 })

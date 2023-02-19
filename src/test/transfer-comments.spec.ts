@@ -1,8 +1,8 @@
 import { BadRequestException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { AppModule } from '../app.module';
-import { LoginClientUseCase } from '../usecases/loginClient/LoginClient';
-import { LoginClientDTO } from '../usecases/loginClient/LoginClientDTO';
+import { ProfileDTO } from '../Customer/usecases/profile/ProfileDTO';
+import { ProfileUseCase } from '../Customer/usecases/profile/ProfileUseCase';
 import { TransferCommentUseCase } from '../usecases/transferComments/TransferComment';
 import { TransferCommentDTO } from '../usecases/transferComments/TransferCommentDTO';
 import { InvalidTransferCommentDTO } from '../usecases/transferComments/TransferCommentErrors';
@@ -10,11 +10,11 @@ import { CONSTANTS } from '../utils/constants';
 
 describe('Transfer comments useCase', () => {
   let useCase: TransferCommentUseCase;
-  let loginUseCase: LoginClientUseCase;
+  let saveProfileUseCase: ProfileUseCase;
   let randomString: string;
   let token: string;
 
-  const loginDto: LoginClientDTO = {
+  const loginDto: ProfileDTO = {
     username: process.env.URUM_USERNAME!,
     password: process.env.URUM_PASSWORD!,
     siteUrl: 'https://urumdental.com',
@@ -27,7 +27,7 @@ describe('Transfer comments useCase', () => {
     }).compile();
 
     useCase = module.get<TransferCommentUseCase>(TransferCommentUseCase);
-    loginUseCase = module.get<LoginClientUseCase>(LoginClientUseCase);
+    saveProfileUseCase = module.get<ProfileUseCase>(ProfileUseCase);
   });
 
   it('useCase should be defined', () => {
@@ -55,7 +55,7 @@ describe('Transfer comments useCase', () => {
   });
 
   it('should respond correctly, when provided with valid product data', async () => {
-    const loginResult = await loginUseCase.loginClient(loginDto);
+    const loginResult = await saveProfileUseCase.saveProfile(loginDto);
     token = loginResult.value.getValue();
 
     const dto: TransferCommentDTO = {
@@ -78,7 +78,7 @@ describe('Transfer comments useCase', () => {
   }, 12_000);
 
   it('should respond correctly, when provided with valid post data', async () => {
-    const loginResult = await loginUseCase.loginClient(loginDto);
+    const loginResult = await saveProfileUseCase.saveProfile(loginDto);
     token = loginResult.value.getValue();
 
     const dto: TransferCommentDTO = {

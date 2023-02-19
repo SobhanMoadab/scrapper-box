@@ -17,4 +17,6 @@ describe('login to utility-box', () => {
   it('useCase should be defined', () => {
     expect(useCase).toBeDefined();
   });
+
+  it('should respond with error with invalid dto', async () => {});
 });

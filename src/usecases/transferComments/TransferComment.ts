@@ -21,7 +21,6 @@ export class TransferCommentUseCase {
       if (!dto.token) {
         return left(new InvalidTransferCommentDTO());
       }
-
       const postFix =
         dto.contentType === 'PRODUCT'
           ? CONSTANTS.WORDPRESS_PRODUCT_REVIEWS_POSTFIX
@@ -39,6 +38,10 @@ export class TransferCommentUseCase {
       );
       return right(Result.ok());
     } catch (err) {
+      console.log(
+        '🚀 ~ file: TransferComment.ts:42 ~ TransferCommentUseCase ~ transferComment ~ err',
+        err,
+      );
       return left(new UnexpectedError('Something went wrong'));
     }
   }

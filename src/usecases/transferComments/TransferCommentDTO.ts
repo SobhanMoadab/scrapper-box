@@ -11,7 +11,7 @@ export type TransferCommentDTO = {
   comment: WordPressProductComment | WordPressPostComment;
 };
 export type WordPressProductComment = {
-  product_id: string;
+  product_id: number;
   review: string;
   reviewer: string;
   reviewer_email: string;

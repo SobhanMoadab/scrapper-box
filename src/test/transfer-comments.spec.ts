@@ -63,7 +63,7 @@ describe('Transfer comments useCase', () => {
       token: token,
       siteUrl: CONSTANTS.URUM_DENTAL_URL,
       comment: {
-        product_id: '5848',
+        product_id: 5848,
         review: 'testing review',
         reviewer: `${randomString}`,
         reviewer_email: `${randomString}@gmail.com`,

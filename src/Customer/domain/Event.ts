@@ -14,7 +14,7 @@ export class Event extends Entity<EventProps> {
   }
 
   static create(props: EventProps): Result<Event> {
-    if (!props.comments || !props.date) {
+    if (!props.comments[0] || !props.date) {
       return Result.fail('invalid event props');
     }
     const event = new Event(props);

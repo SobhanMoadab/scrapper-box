@@ -6,8 +6,7 @@ export class SaveEventsDTO {
   comments: string[];
 
   @IsBoolean()
-  @IsNotEmpty()
-  status: boolean;
+  status?: boolean;
 
   @IsDate()
   @IsNotEmpty()

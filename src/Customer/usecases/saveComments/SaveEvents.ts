@@ -7,7 +7,7 @@ import { SaveEventsDTO } from './SaveEventsDTO';
 
 type Response = Either<UnexpectedError | Result<any>, Result<void>>;
 
-export default class SaveCommentsUseCase {
+export default class SaveEventUseCase {
   constructor(public eventRepo: IEventRepository) {}
 
   async saveEvents(dto: SaveEventsDTO): Promise<Response> {

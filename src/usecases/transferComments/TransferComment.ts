@@ -3,11 +3,7 @@ import axios from 'axios';
 import { Either, left, Result, right } from '../../core/Result';
 import { UnexpectedError } from '../../core/UnexpectedError';
 import { CONSTANTS } from '../../utils/constants';
-import {
-  TransferCommentDTO,
-  WordPressPostComment,
-  WordPressProductComment,
-} from './TransferCommentDTO';
+import { TransferCommentDTO } from './TransferCommentDTO';
 import { InvalidTransferCommentDTO } from './TransferCommentErrors';
 
 type Response = Either<

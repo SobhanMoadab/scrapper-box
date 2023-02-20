@@ -4,7 +4,7 @@ import { UseCaseError } from '../../../core/UseCaseError';
 export class InvalidInput extends Result<UseCaseError> {
   constructor() {
     super(false, {
-      message: `Username or Password is empty`,
+      message: `Input is not valid`,
     } as UseCaseError);
   }
 }

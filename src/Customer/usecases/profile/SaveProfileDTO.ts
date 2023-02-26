@@ -1,6 +1,6 @@
-import { IsString, IsNotEmpty } from 'class-validator';
+import { IsString, IsNotEmpty, IsNumber } from 'class-validator';
 
-export class ProfileDTO {
+export class SaveProfileDTO {
   @IsString()
   @IsNotEmpty()
   siteUsername: string;
@@ -16,4 +16,12 @@ export class ProfileDTO {
   @IsString()
   @IsNotEmpty()
   commentType: string;
+
+  @IsString()
+  @IsNotEmpty()
+  publishTime: string;
+
+  @IsNotEmpty()
+  @IsNumber()
+  commentLimit: number;
 }

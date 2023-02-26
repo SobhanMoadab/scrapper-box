@@ -34,6 +34,10 @@ export class Result<T> {
     return this._value as T;
   }
 
+  public static resultsToValues<T>(results: Array<Result<T>>): Array<T> {
+    return results.map((r) => r.getValue());
+  }
+
   public getErrorValue(): T {
     return this.error as T;
   }

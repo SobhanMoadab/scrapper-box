@@ -1,3 +1,4 @@
+import { Result } from '../core/Result';
 import { DigikalaCommentVM } from '../usecases/fetchComments/FetchCommentDTO';
 import { DigikalaProductVM } from '../usecases/searchProduct/SearchProductDTO';
 

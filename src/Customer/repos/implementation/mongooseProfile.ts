@@ -5,6 +5,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Injectable } from '@nestjs/common';
 import { IProfileRepository } from '../IProfileRepository';
 import { Profile, ProfileProps } from '../../domain/Profile';
+import { UniqueEntityID } from '../../../core/UniqueEntityID';
 
 @Injectable()
 export class ProfileRepository implements IProfileRepository {
@@ -13,27 +14,37 @@ export class ProfileRepository implements IProfileRepository {
     private profileModel: Model<ProfileProps>,
   ) {}
 
+  /*
+   get only events that are for today
+   check if events belong to profile that is not limited
+   if type is daily {
+    find two time
+   }
+   transfer them
+   and limit the account
+  */
+
   //   async exists(username: string): Promise<boolean> {
   //     const founded = await this.profileModel.findOne({ username }).lean();
   //     if (founded) return true;
   //     else return false;
   //   }
-  //   async findByUsername(username: string): Promise<Customer> {
-  //     const founded = await this.profileModel.findOne({ username });
-  //     if (!founded) throw new Error();
-  //     return Customer.create(founded).getValue();
-  //   }
+  async findByCustomerId(id: string): Promise<Profile> {
+    const founded = await this.profileModel.findOne({ customerId: id });
+    if (!founded) throw new Error();
+    return Profile.create(
+      founded,
+      new UniqueEntityID(founded._id.toString()),
+    ).getValue();
+  }
+
   async save(profile: Profile): Promise<void> {
-    const result = await this.profileModel.findOneAndUpdate(
+    await this.profileModel.findOneAndUpdate(
       {
         siteUsername: profile.props.siteUsername,
       },
       profile.props,
       { upsert: true },
-    );
-    console.log(
-      '🚀 ~ file: mongooseProfile.ts:34 ~ ProfileRepository ~ save ~ result',
-      result,
     );
   }
 }

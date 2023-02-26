@@ -2,23 +2,23 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { AppModule } from '../app.module';
 import { Customer } from '../Customer/domain/Customer';
 import { ICustomerRepository } from '../Customer/repos/ICustomerRepository';
-import { ProfileDTO } from '../Customer/usecases/profile/ProfileDTO';
+import { ProfileDTO } from '../Customer/usecases/profile/SaveProfileDTO';
 import {
   InvalidCredential,
   InvalidInput,
-} from '../Customer/usecases/profile/ProfileErrors';
-import { ProfileUseCase } from '../Customer/usecases/profile/ProfileUseCase';
+} from '../Customer/usecases/profile/SaveProfileErrors';
+import { ProfileUseCase } from '../Customer/usecases/profile/SaveProfileUseCase';
 
 describe('save profile', () => {
   let useCase: ProfileUseCase;
   let customerRepo: ICustomerRepository;
 
   beforeEach(async () => {
-    customerRepo = {
-      exists: jest.fn(),
-      findByUsername: jest.fn(),
-      save: jest.fn(),
-    };
+    // customerRepo = {
+    //   exists: jest.fn(),
+    //   findByUsername: jest.fn(),
+    //   save: jest.fn(),
+    // };
     useCase = new ProfileUseCase(customerRepo);
     //   jest.setTimeout(10000);
     //   const module: TestingModule = await Test.createTestingModule({
@@ -73,10 +73,11 @@ describe('save profile', () => {
     customerRepo.findByUsername = jest.fn(() => Promise.resolve(customer));
 
     const dto: ProfileDTO = {
-      username: process.env.URUM_USERNAME!,
-      password: process.env.URUM_PASSWORD!,
+      siteUsername: process.env.URUM_USERNAME!,
+      sitePassword: process.env.URUM_PASSWORD!,
       siteUrl: 'https://urumdental.com',
       commentType: 'PRODUCT',
+      publishTime: 'WEEKLY',
     };
     // When i attempt to login a client
     const result = await useCase.saveProfile(dto);

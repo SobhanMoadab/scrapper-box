@@ -5,8 +5,8 @@ import { UnexpectedError } from '../../../core/UnexpectedError';
 import { Profile } from '../../domain/Profile';
 import { ProfileRepository } from '../../repos/implementation/mongooseProfile';
 import { IProfileRepository } from '../../repos/IProfileRepository';
-import { ProfileDTO } from './ProfileDTO';
-import { InvalidCredential } from './ProfileErrors';
+import { SaveProfileDTO } from './SaveProfileDTO';
+import { InvalidCredential } from './SaveProfileErrors';
 import { genSalt, genSaltSync, hashSync } from 'bcrypt';
 
 type Response = Either<
@@ -14,7 +14,7 @@ type Response = Either<
   Result<string>
 >;
 
-export class ProfileUseCase {
+export class SaveProfileUseCase {
   constructor(
     @Inject(ProfileRepository) public profileRepo: IProfileRepository,
   ) {}
@@ -23,7 +23,9 @@ export class ProfileUseCase {
     sitePassword,
     siteUrl,
     commentType,
-  }: ProfileDTO): Promise<Response> {
+    publishTime,
+    commentLimit,
+  }: SaveProfileDTO): Promise<Response> {
     try {
       let axiosResult: AxiosResponse;
 
@@ -50,6 +52,9 @@ export class ProfileUseCase {
         sitePassword: hashSync(sitePassword, salt),
         siteUrl,
         siteUsername,
+        publishTime,
+        commentLimit,
+        token: axiosResult.data.token,
       }).getValue();
 
       await this.profileRepo.save(profile);

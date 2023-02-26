@@ -4,12 +4,19 @@ export type WordPressPostComment = {
   author_email: string;
   content: any;
 };
+
 export type TransferCommentDTO = {
   siteUrl: string;
   contentType: string;
   token: string;
   comment: WordPressProductComment | WordPressPostComment;
 };
+
+export function isReview(
+  object: WordPressPostComment | WordPressProductComment,
+): object is WordPressProductComment {
+  return (object as WordPressProductComment).product_id !== undefined;
+}
 export type WordPressProductComment = {
   product_id: number;
   review: string;

@@ -1,7 +1,7 @@
 import { Profile } from '../domain/Profile';
 
 export interface IProfileRepository {
-  //   findByUsername(username: string): Promise<Customer>;
+  findByCustomerId(customerId: string): Promise<Profile>;
   //   exists(username: string): Promise<boolean>;
   save(profile: Profile): Promise<void>;
 }

@@ -1,8 +1,8 @@
 import { BadRequestException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { AppModule } from '../app.module';
-import { ProfileDTO } from '../Customer/usecases/profile/ProfileDTO';
-import { ProfileUseCase } from '../Customer/usecases/profile/ProfileUseCase';
+import { ProfileDTO } from '../Customer/usecases/profile/SaveProfileDTO';
+import { ProfileUseCase } from '../Customer/usecases/profile/SaveProfileUseCase';
 import { TransferCommentUseCase } from '../usecases/transferComments/TransferComment';
 import { TransferCommentDTO } from '../usecases/transferComments/TransferCommentDTO';
 import { InvalidTransferCommentDTO } from '../usecases/transferComments/TransferCommentErrors';

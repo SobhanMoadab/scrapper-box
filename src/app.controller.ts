@@ -6,7 +6,7 @@ import { FetchCommentsUseCase } from './usecases/fetchComments/FetchComment';
 import { AgentNotFound } from './usecases/searchProduct/SearchProductErrors';
 import { ProductNotFound } from './usecases/fetchComments/FetchCommentErrors';
 import { Response as ExpressResponse } from 'express';
-import { InvalidCredential } from './Customer/usecases/profile/ProfileErrors';
+import { InvalidCredential } from './Customer/usecases/profile/SaveProfileErrors';
 import { TransferCommentDTO } from './usecases/transferComments/TransferCommentDTO';
 import { TransferCommentUseCase } from './usecases/transferComments/TransferComment';
 import { InvalidTransferCommentDTO } from './usecases/transferComments/TransferCommentErrors';

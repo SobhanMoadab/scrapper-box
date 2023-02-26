@@ -4,10 +4,10 @@ const isEntity = (v: any): v is Entity<any> => {
   return v instanceof Entity;
 };
 export abstract class Entity<T> {
-  protected readonly _id: UniqueEntityID;
+  protected readonly _id: UniqueEntityID | string;
   public readonly props: T;
 
-  constructor(props: T, id?: UniqueEntityID) {
+  constructor(props: T, id?: UniqueEntityID | string) {
     this._id = id ? id : new UniqueEntityID();
     this.props = props;
   }
@@ -24,7 +24,9 @@ export abstract class Entity<T> {
     if (!isEntity(object)) {
       return false;
     }
-
-    return this._id.equals(object._id);
+    if (typeof this._id === 'string') {
+      return false;
+    }
+    return this._id.equals(object._id as UniqueEntityID);
   }
 }

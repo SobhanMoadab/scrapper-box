@@ -6,18 +6,18 @@ import { Customer404 } from './usecases/login/LoginErrors';
 import {
   InvalidCredential,
   InvalidInput,
-} from './usecases/profile/ProfileErrors';
-import { ProfileDTO } from './usecases/profile/ProfileDTO';
-import { ProfileUseCase } from './usecases/profile/ProfileUseCase';
-import { SaveEventsDTO } from './usecases/saveComments/SaveEventsDTO';
-import SaveEventUseCase from './usecases/saveComments/SaveEvents';
+} from './usecases/profile/SaveProfileErrors';
+import { SaveProfileDTO } from './usecases/profile/SaveProfileDTO';
+import { SaveProfileUseCase } from './usecases/profile/SaveProfileUseCase';
+import { SaveCommentsDTO } from './usecases/saveComments/SaveCommentsDTO';
+import { SaveCommentUseCase } from './usecases/saveComments/SaveComments';
 
 @Controller('customers')
 export class CustomerController {
   constructor(
-    private readonly profileUseCase: ProfileUseCase,
+    private readonly profileUseCase: SaveProfileUseCase,
     private readonly loginUseCase: LoginUseCase,
-    private readonly saveEventUseCase: SaveEventUseCase,
+    private readonly saveCommentUseCase: SaveCommentUseCase,
   ) {}
   @Post('login')
   async login(@Body() body: LoginDTO, @Response() res: ExpressResponse) {
@@ -54,7 +54,7 @@ export class CustomerController {
   }
   @Post('profile')
   async loginClient(
-    @Body() body: ProfileDTO,
+    @Body() body: SaveProfileDTO,
     @Response() res: ExpressResponse,
   ) {
     try {
@@ -86,14 +86,13 @@ export class CustomerController {
         .json({ status: 500, result: 'Something went wrong' });
     }
   }
-  @Post('save-event')
+  @Post('save-comments')
   async saveEvent(
-    @Body() body: SaveEventsDTO,
+    @Body() body: SaveCommentsDTO,
     @Response() res: ExpressResponse,
   ) {
     try {
-      const result = await this.saveEventUseCase.saveEvents(body);
-      const value = result.value;
+      const result = await this.saveCommentUseCase.saveComments(body);
       if (result.isLeft()) {
         const error = result.value;
         switch (error.constructor) {
@@ -107,7 +106,9 @@ export class CustomerController {
               .json({ status: 500, result: error.getErrorValue() });
         }
       } else {
-        return res.status(200).json({ status: 200, result: value.getValue() });
+        return res
+          .status(201)
+          .json({ status: 201, result: 'Successfully saved' });
       }
     } catch (err) {
       return res

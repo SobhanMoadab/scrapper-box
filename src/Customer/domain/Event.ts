@@ -1,23 +1,28 @@
+import { ObjectId } from 'mongoose';
 import { Entity } from '../../core/Entity';
 import { Result } from '../../core/Result';
-import { Profile } from './Profile';
+import { UniqueEntityID } from '../../core/UniqueEntityID';
+import {
+  WordPressPostComment,
+  WordPressProductComment,
+} from '../../usecases/transferComments/TransferCommentDTO';
 
 export type EventProps = {
-  comments: string[];
   status?: boolean;
-  date: Date;
+  date: string;
+  profileId: string | ObjectId;
 };
 
 export class Event extends Entity<EventProps> {
-  constructor(props: EventProps) {
-    super(props);
+  get eventId(): string {
+    return this._id.toString();
+  }
+  constructor(props: EventProps, id?: string) {
+    super(props, id);
   }
 
-  static create(props: EventProps): Result<Event> {
-    if (!props.comments[0] || !props.date) {
-      return Result.fail('invalid event props');
-    }
-    const event = new Event(props);
+  static create(props: EventProps, id?: string): Result<Event> {
+    const event = new Event(props, id);
     return Result.ok(event);
   }
 }

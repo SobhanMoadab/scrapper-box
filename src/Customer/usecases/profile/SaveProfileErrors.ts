@@ -8,6 +8,13 @@ export class InvalidInput extends Result<UseCaseError> {
     } as UseCaseError);
   }
 }
+export class Profile404 extends Result<UseCaseError> {
+  constructor() {
+    super(false, {
+      message: `Could not find profile`,
+    } as UseCaseError);
+  }
+}
 export class InvalidCredential extends Result<UseCaseError> {
   constructor() {
     super(false, {

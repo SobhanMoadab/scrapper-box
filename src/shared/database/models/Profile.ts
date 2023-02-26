@@ -8,6 +8,9 @@ export const ProfileSchema = new Schema<ProfileProps>(
     sitePassword: { type: String },
     siteUsername: { type: String },
     commentType: { type: String, enum: ['PRODUCT', 'POST'] },
+    publishTime: { type: String },
+    token: { type: String },
+    commentLimit: { type: Number },
   },
   { timestamps: true },
 );

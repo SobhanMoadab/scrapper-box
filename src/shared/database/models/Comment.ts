@@ -6,7 +6,8 @@ export const CommentSchema = new Schema<CommentProps>(
   {
     comment: { type: Schema.Types.Mixed },
     profileId: { type: Schema.Types.ObjectId, ref: 'Profile' },
-    publishDate: { type: String },
+    publishDate: { type: Date },
+    status: { type: Boolean, default: false },
   },
   { timestamps: true },
 );

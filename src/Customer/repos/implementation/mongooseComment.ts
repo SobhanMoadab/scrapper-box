@@ -3,6 +3,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { Model } from 'mongoose';
 import { Comment, CommentProps } from '../../domain/Comment';
 import { ICommentRepository } from '../ICommentRepository';
+import * as moment from 'moment-timezone';
 
 @Injectable()
 export class CommentRepository implements ICommentRepository {
@@ -28,15 +29,22 @@ export class CommentRepository implements ICommentRepository {
           comment: c.comment,
           profileId: c.profileId,
           publishDate: c.publishDate,
+          status: c.status,
         },
         c._id,
       ).getValue();
     });
   }
-  async findTodayComments(eventId: string): Promise<Comment[]> {
+  async findTodayComments(profileId: string): Promise<Comment[]> {
+    const start = moment().startOf('day').toDate();
+    const end = moment().endOf('day').toDate();
     const founded = await this.commentModel.find({
-      eventId,
-      createdAt: { $gte: new Date(Date.now() - 1000 * 60 * 60 * 24) },
+      status: false,
+      profileId,
+      publishDate: {
+        $gte: start,
+        $lte: end,
+      },
     });
     if (!founded) throw new Error();
     return this.commentMapper(founded);
@@ -45,6 +53,16 @@ export class CommentRepository implements ICommentRepository {
     for (const comment of comments) {
       await this.save(comment);
     }
+  }
+  async markSentComment(comment: unknown): Promise<void> {
+    await this.commentModel.findOneAndUpdate(
+      {
+        comment,
+      },
+      {
+        status: true,
+      },
+    );
   }
   async save(comment: Comment): Promise<void> {
     await this.commentModel.create({

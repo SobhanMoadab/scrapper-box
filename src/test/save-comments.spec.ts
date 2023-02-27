@@ -3,27 +3,25 @@ import { IProfileRepository } from '../Customer/repos/IProfileRepository';
 import { InvalidInput } from '../Customer/usecases/profile/SaveProfileErrors';
 import { SaveCommentUseCase } from '../Customer/usecases/saveComments/SaveComments';
 import { SaveCommentsDTO } from '../Customer/usecases/saveComments/SaveCommentsDTO';
-import { CalledWithMock, mock } from 'jest-mock-extended';
 import { Profile } from '../Customer/domain/Profile';
+import { Comment } from '../Customer/domain/Comment';
 
 describe('Save comments use case', () => {
   let useCase: SaveCommentUseCase;
   let commentRepo: ICommentRepository;
   let profileRepo: IProfileRepository;
   let dto: SaveCommentsDTO;
-  let profile: Profile;
-
+  const profile = Profile.create({
+    commentLimit: 3,
+    commentType: 'POST',
+    customerId: 'test',
+    publishTime: 'WEEKLY',
+    sitePassword: 'test',
+    siteUrl: 'test',
+    siteUsername: 'test',
+    token: 'test',
+  }).getValue();
   beforeEach(() => {
-    profile = Profile.create({
-      commentLimit: 3,
-      commentType: 'POST',
-      customerId: 'test',
-      publishTime: 'WEEKLY',
-      sitePassword: 'test',
-      siteUrl: 'test',
-      siteUsername: 'test',
-      token: 'test',
-    }).getValue();
     dto = {
       comments: [
         {
@@ -40,7 +38,7 @@ describe('Save comments use case', () => {
           content: 'test',
         },
       ],
-      publishTime: 'WEEKLY',
+      publishType: 'WEEKLY',
     };
     profileRepo = {
       findByCustomerId: jest.fn(() => Promise.resolve(profile)),
@@ -55,23 +53,13 @@ describe('Save comments use case', () => {
   });
 
   it('should save events to database', async () => {
+    profileRepo.findByCustomerId = jest.fn(() => Promise.resolve(profile));
     const validDTO: SaveCommentsDTO = {
       comments: dto.comments,
-      publishTime: 'WEEKLY',
+      publishType: 'WEEKLY',
     };
     const result = await useCase.saveComments(validDTO);
-    console.log('🚀', result.value);
     expect(result.isLeft()).toBeFalsy();
-    expect(commentRepo.save).toBeCalled();
-  });
-
-  it('should respond with error when dto is invalid', async () => {
-    const invalidDTO: SaveCommentsDTO = {
-      comments: dto.comments,
-      publishTime: 'WEEKLY',
-    };
-    const result = await useCase.saveComments(invalidDTO);
-    expect(result.isRight()).toBeFalsy();
-    expect(result.value).toBeInstanceOf(InvalidInput);
+    expect(commentRepo.saveBulk).toBeCalled();
   });
 });

@@ -22,5 +22,5 @@ export class SaveCommentsDTO {
 
   @IsString()
   @IsEnum(['WEEKLY', 'DAILY'])
-  publishTime: string;
+  publishType: string;
 }

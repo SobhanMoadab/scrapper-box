@@ -33,7 +33,16 @@ export class ProfileRepository implements IProfileRepository {
     const founded = await this.profileModel.findOne({ customerId: id });
     if (!founded) throw new Error();
     return Profile.create(
-      founded,
+      {
+        commentLimit: founded.commentLimit,
+        commentType: founded.commentType,
+        customerId: founded.customerId,
+        publishTime: founded.publishTime,
+        sitePassword: founded.sitePassword,
+        siteUrl: founded.siteUrl,
+        siteUsername: founded.siteUsername,
+        token: founded.token,
+      },
       new UniqueEntityID(founded._id.toString()),
     ).getValue();
   }

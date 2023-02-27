@@ -8,8 +8,9 @@ import {
 
 export type CommentProps = {
   comment: WordPressPostComment | WordPressProductComment;
-  publishDate: string;
+  publishDate: string | Date;
   profileId: string | ObjectId;
+  status?: boolean;
 };
 
 export class Comment extends Entity<CommentProps> {
@@ -18,7 +19,6 @@ export class Comment extends Entity<CommentProps> {
   }
 
   static create(props: CommentProps, id?: string): Result<Comment> {
-    console.log('🚀🚀🚀🚀', props);
     if (!props.comment || !props.publishDate || !props.profileId) {
       return Result.fail('invalid comment props');
     }

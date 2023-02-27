@@ -1,6 +1,6 @@
 import { Either, left, Result, right } from '../../../core/Result';
 import { UnexpectedError } from '../../../core/UnexpectedError';
-import { InvalidInput, Profile404 } from '../profile/SaveProfileErrors';
+import { Profile404 } from '../profile/SaveProfileErrors';
 import { SaveCommentsDTO } from './SaveCommentsDTO';
 import { Inject } from '@nestjs/common';
 import { ProfileRepository } from '../../repos/implementation/mongooseProfile';
@@ -10,10 +10,7 @@ import { getPublishDates } from '../../../shared/utils/getPublishDates';
 import { ICommentRepository } from '../../repos/ICommentRepository';
 import { CommentRepository } from '../../repos/implementation/mongooseComment';
 import { Comment } from '../../domain/Comment';
-import {
-  isReview,
-  WordPressPostComment,
-} from '../../../usecases/transferComments/TransferCommentDTO';
+import { isReview } from '../../../usecases/transferComments/TransferCommentDTO';
 
 type Response = Either<UnexpectedError | Result<any>, Result<void>>;
 
@@ -62,7 +59,7 @@ export class SaveCommentUseCase {
               author_name: comment.author_name,
               content: comment.content,
             },
-            publishDate: '',
+            publishDate: publishTime[index],
             profileId: profile.profileId.toString(),
           });
           commentResults.push(commentOrError);
@@ -76,10 +73,6 @@ export class SaveCommentUseCase {
       await this.commentRepo.saveBulk(comments);
       return right(Result.ok());
     } catch (err) {
-      console.log(
-        '🚀 ~ file: SaveComments.ts:79 ~ SaveCommentUseCase ~ saveComments ~ err:',
-        err,
-      );
       return left(new UnexpectedError('Something went wrong'));
     }
   }

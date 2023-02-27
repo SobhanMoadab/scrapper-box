@@ -2,13 +2,17 @@ import { Injectable } from '@nestjs/common';
 import { Inject } from '@nestjs/common/decorators';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { TransferCommentUseCase } from '../usecases/transferComments/TransferComment';
-import { TransferCommentDTO } from '../usecases/transferComments/TransferCommentDTO';
+import {
+  isReview,
+  TransferCommentDTO,
+} from '../usecases/transferComments/TransferCommentDTO';
 import { ICommentRepository } from './repos/ICommentRepository';
 import { IEventRepository } from './repos/IEventRepository.ts';
 import { CommentRepository } from './repos/implementation/mongooseComment';
 import { EventRepository } from './repos/implementation/mongooseEvent';
 import { ProfileRepository } from './repos/implementation/mongooseProfile';
 import { IProfileRepository } from './repos/IProfileRepository';
+import * as moment from 'moment-timezone';
 
 @Injectable()
 export class TasksService {
@@ -19,34 +23,39 @@ export class TasksService {
     public readonly transferComment: TransferCommentUseCase,
   ) {}
 
-  @Cron(CronExpression.EVERY_10_HOURS, {
+  @Cron(CronExpression.EVERY_5_SECONDS, {
     timeZone: 'Asia/Tehran',
   })
   async handleCron() {
+    const currentTime = moment().toDate();
     try {
       const profile = await this.profileRepo.findByCustomerId(
         '63f23039f1765d0e1a48bb43',
       );
       const foundedComments = await this.commentRepo.findTodayComments(
-        '63f3a0f9b82d49c5b2ef5c28',
+        '63f25062f5885a3cbc18fd36',
       );
-
-      for (let index = 0; index <= profile.props.commentLimit; index++) {
-        if (index > foundedComments.length) continue;
-
-        // const { comments } = unfinishedEvent.props;
-
+      for (let i = 0; i <= profile.props.commentLimit; i++) {
+        console.log({
+          111: currentTime < foundedComments[i].props.publishDate,
+        });
+        if (
+          currentTime < foundedComments[i].props.publishDate ||
+          !foundedComments
+        )
+          continue;
         const dto: TransferCommentDTO = {
-          comment: foundedComments[index].props.comment,
+          comment: foundedComments[i].props.comment,
           contentType: profile.props.commentType,
           siteUrl: profile.props.siteUrl,
           token: profile.props.token,
         };
 
-        // await this.transferComment.transferComment(dto);
+        const result = await this.transferComment.transferComment(dto);
+        await this.commentRepo.markSentComment(dto.comment);
         // await this.eventRepo.removeCommentFromEvent(
         //   unfinishedEvent.eventId.toString(),
-        //   comments[index],
+        //   comments[i],
         // );
       }
     } catch (err) {

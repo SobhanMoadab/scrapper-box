@@ -9,7 +9,7 @@ export type ProfileProps = {
   sitePassword: string;
   commentType: string;
   siteUrl: string;
-  publishTime: string;
+  publishType: string;
   commentLimit: number;
   token: string;
 };

@@ -91,6 +91,7 @@ export class CustomerController {
     @Body() body: SaveCommentsDTO,
     @Response() res: ExpressResponse,
   ) {
+    console.log(body);
     try {
       const result = await this.saveCommentUseCase.saveComments(body);
       if (result.isLeft()) {

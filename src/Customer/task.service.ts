@@ -23,9 +23,9 @@ export class TasksService {
     public readonly transferComment: TransferCommentUseCase,
   ) {}
 
-  @Cron(CronExpression.EVERY_5_SECONDS, {
-    timeZone: 'Asia/Tehran',
-  })
+  // @Cron(CronExpression.EVERY_5_SECONDS, {
+  //   timeZone: 'Asia/Tehran',
+  // })
   async handleCron() {
     const currentTime = moment().toDate();
     try {

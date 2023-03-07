@@ -37,7 +37,7 @@ export class ProfileRepository implements IProfileRepository {
         commentLimit: founded.commentLimit,
         commentType: founded.commentType,
         customerId: founded.customerId,
-        publishTime: founded.publishTime,
+        publishType: founded.publishType,
         sitePassword: founded.sitePassword,
         siteUrl: founded.siteUrl,
         siteUsername: founded.siteUsername,

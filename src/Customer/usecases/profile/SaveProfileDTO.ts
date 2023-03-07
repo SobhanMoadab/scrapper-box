@@ -19,7 +19,7 @@ export class SaveProfileDTO {
 
   @IsString()
   @IsNotEmpty()
-  publishTime: string;
+  publishType: string;
 
   @IsNotEmpty()
   @IsNumber()

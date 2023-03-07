@@ -1,5 +1,5 @@
 import { InjectModel } from '@nestjs/mongoose';
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { Model } from 'mongoose';
 import { Comment, CommentProps } from '../../domain/Comment';
 import { ICommentRepository } from '../ICommentRepository';
@@ -64,6 +64,16 @@ export class CommentRepository implements ICommentRepository {
       },
     );
   }
+  // async findLatestComment(profileId: string): Promise<Comment> {
+  //   const foundedComment = await this.commentModel
+  //     .findOne({
+  //       profileId,
+  //     })
+  //     .sort({
+  //       publishDate: 'descending',
+  //     });
+  //   return Comment.create({comment,profileId,publishDate,status}, foundedComment._id).getValue();
+  // }
   async save(comment: Comment): Promise<void> {
     await this.commentModel.create({
       comment: comment.props.comment,

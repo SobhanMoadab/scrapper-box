@@ -22,6 +22,8 @@ export class SaveCommentUseCase {
 
   async saveComments(dto: SaveCommentsDTO): Promise<Response> {
     let profile: Profile;
+    let latestComment: Comment;
+
     try {
       try {
         profile = await this.profileRepo.findByCustomerId(
@@ -30,9 +32,10 @@ export class SaveCommentUseCase {
       } catch (err) {
         return left(new Profile404());
       }
+
       const publishTime = getPublishDates(
         dto.comments.length,
-        profile.props.publishTime,
+        profile.props.publishType,
         profile.props.commentLimit,
       );
       const commentResults: Array<Result<Comment>> = [];

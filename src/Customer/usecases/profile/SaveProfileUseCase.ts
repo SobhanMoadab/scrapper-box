@@ -23,7 +23,7 @@ export class SaveProfileUseCase {
     sitePassword,
     siteUrl,
     commentType,
-    publishTime,
+    publishType,
     commentLimit,
   }: SaveProfileDTO): Promise<Response> {
     try {
@@ -52,7 +52,7 @@ export class SaveProfileUseCase {
         sitePassword: hashSync(sitePassword, salt),
         siteUrl,
         siteUsername,
-        publishTime,
+        publishType,
         commentLimit,
         token: axiosResult.data.token,
       }).getValue();
